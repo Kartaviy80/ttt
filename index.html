@@ -2,48 +2,47 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Панель КП «ІНФО-РАДА-ДНІПРО»</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>КП «ІНФО-РАДА-ДНІПРО» — Система обробки</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #1a73e8; margin-bottom: 20px; padding-bottom: 10px; }
         
-        /* Список запитів */
         table { width: 100%; border-collapse: collapse; }
-        th { background: #1a73e8; color: white; padding: 12px; text-align: left; font-size: 13px; }
-        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; transition: 0.2s; }
-        tr:hover { background: #f1f7ff; cursor: pointer; }
-        .new-tag { background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-right: 8px; font-weight: bold; }
+        th { background: #1a73e8; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; }
+        tr:hover { background: #f1f7ff; }
 
-        /* Формат А4 */
         .printable-doc {
             display: none; width: 210mm; min-height: 297mm; padding: 20mm 15mm 20mm 25mm;
-            margin: 20px auto; background: white; font-family: "Times New Roman", Times, serif;
-            font-size: 14pt; line-height: 1.3; color: black; text-align: justify; box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin: auto; background: white; font-family: "Times New Roman", serif;
+            font-size: 14pt; line-height: 1.3; text-align: justify; color: black; outline: none;
         }
-        .edit-zone { background: #f4f8ff; border-bottom: 1px dashed #1a73e8; }
+        .user-input { background: #f9fbff; border-bottom: 1px dashed #1a73e8; }
 
         @media print {
             .no-print, .container { display: none !important; }
             .printable-doc { display: block !important; margin: 0; box-shadow: none; width: 100%; }
-            .edit-zone { background: none !important; border: none !important; }
+            .user-input { background: none !important; border: none !important; }
             @page { size: A4; margin: 0; }
         }
 
-        .btn { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-back { background: #6c757d; color: white; margin-right: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 10px; }
         .btn-print { background: #28a745; color: white; }
+        .btn-close { background: #6c757d; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container no-print">
-    <div class="header">
-        <h2 style="margin:0; color:#1a73e8;">Моніторинг запитів (Останні зверху)</h2>
-        <div id="status" style="font-weight:bold;">Завантаження через Google API...</div>
+    <div class="header-main">
+        <h2 style="margin:0;">Моніторинг запитів</h2>
+        <div id="status">Завантаження...</div>
     </div>
-    <div id="table_div"></div>
+    <table id="reqTable" style="display:none;">
+        <thead><tr><th>Дата (A)</th><th>ПІБ (C)</th><th>Місце (E)</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+    </table>
 </div>
 
 <div id="printArea" class="printable-doc" contenteditable="true">
@@ -53,108 +52,96 @@
             <div style="font-size: 11pt; text-transform: uppercase;">Комунальне підприємство «Інфо-рада-дніпро»</div>
             <div style="font-size: 11pt; text-transform: uppercase;">Дніпровської міської ради</div>
             <div style="font-size: 9pt; font-weight: normal; margin-top: 5px;">
-                просп. Дмитра Яворницького, 75, м. Дніпро, 49000, тел. +3 8067 872-79-68<br>
-                e-mail: inforadadnipro@gmail.com; ЄДРПОУ 36094821
+                просп. Дмитра Яворницького, 75, м. Дніпро, 49000, тел. +3 8067 872-79-68, ЄДРПОУ 36094821
             </div>
         </div>
     </div>
 
     <div style="margin-bottom: 30px;">
-        <span class="edit-zone">______________</span> № <span class="edit-zone">__________</span>, на <span class="edit-zone">СЦ-___/___/___</span> від <span id="doc_A" class="edit-zone"></span>
+        <span class="user-input">______________</span> № <span class="user-input">__________</span>, на СЦ-<span class="user-input">__/__/__</span> від <span id="field_A" class="user-input"></span>
     </div>
 
-    <div style="margin-left: 55%; margin-bottom: 50px; line-height: 1.2;">
-        <b id="doc_C" style="text-transform: uppercase;"></b><br>
-        <span id="doc_B"></span>
+    <div style="margin-left: 55%; margin-bottom: 40px; line-height: 1.2;">
+        <b id="field_C" style="text-transform: uppercase;"></b><br>
+        <span id="field_B"></span>
     </div>
 
     <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">Про розгляд запиту</div>
-    
-    <p>Шановний пане <span id="doc_name_short" class="edit-zone"></span>!</p>
+    <p>Шановний пане <span id="field_Name" class="user-input"></span>!</p>
 
-    <div id="doc_main_text"></div>
+    <div id="field_MainText"></div>
 
     <p style="text-indent: 1.25cm;">Відео за посиланням буде доступне протягом трьох тижнів.</p>
 
-    <div style="margin-top: 70px; display: flex; justify-content: space-between; align-items: flex-end;" contenteditable="false">
-        <span>З повагою<br><b>Директор</b></span>
+    <div style="margin-top: 60px; display: flex; justify-content: space-between;" contenteditable="false">
+        <span>З повагою<br>Директор</span>
         <span style="font-weight: bold; text-transform: uppercase;">Альона ЧУЄВА</span>
     </div>
 
-    <div class="no-print" style="position: fixed; top: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ccc;">
-        <button class="btn btn-back" onclick="location.reload()">← Назад</button>
+    <div class="no-print" style="position: fixed; top: 20px; right: 20px; background: white; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+        <button class="btn btn-close" onclick="location.reload()">← Назад</button>
         <button class="btn btn-print" onclick="window.print()">🖨️ ДРУКУВАТИ</button>
     </div>
 </div>
 
 <script>
-// ID твоєї таблиці з посилання
-const SPREADSHEET_ID = '1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8';
-const GID = '1412438573';
+const RAW_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8/pub?gid=1412438573&single=true&output=csv';
 
-google.charts.load('current', {'packages':['table']});
-google.charts.setOnLoadCallback(drawTable);
+async function loadTable() {
+    try {
+        // Используем прокси AllOrigins, который на скриншоте работал лучше всего
+        const resp = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(RAW_URL)}`);
+        const csv = await resp.text();
+        const rows = csv.split('\n').map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)).slice(1).reverse();
+        
+        const tbody = document.getElementById('tableBody');
+        rows.forEach(cols => {
+            if (cols.length < 5) return;
+            const clean = (s) => s ? s.replace(/"/g, '').trim() : '';
+            const data = {
+                A: clean(cols[0]).split(' ')[0], // Дата [cite: 16]
+                B: clean(cols[1]),                // Email [cite: 18]
+                C: clean(cols[2]),                // ПІБ [cite: 17]
+                E: clean(cols[4]),                // Місце [cite: 19]
+                G: clean(cols[6]),                // Дата поч. [cite: 20]
+                H: clean(cols[7]),                // Час поч. [cite: 21]
+                I: clean(cols[8]),                // Час кін. [cite: 22]
+                L: clean(cols[11])                // Дата закінч. 
+            };
 
-function drawTable() {
-    const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?gid=${GID}&tq=SELECT *`);
-    query.send(handleQueryResponse);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${data.A}</td><td><b>${data.C}</b></td><td>${data.E}</td>`;
+            tr.onclick = () => fillDoc(data);
+            tbody.appendChild(tr);
+        });
+        document.getElementById('status').innerText = "Оберіть запис:";
+        document.getElementById('reqTable').style.display = 'table';
+    } catch (e) {
+        document.getElementById('status').innerText = "Помилка завантаження!";
+    }
 }
 
-function handleQueryResponse(response) {
-    if (response.isError()) {
-        document.getElementById('status').innerHTML = "<span style='color:red'>Помилка API Google: " + response.getMessage() + "</span>";
-        return;
-    }
-
-    const data = response.getDataTable();
-    const rowCount = data.getNumberOfRows();
-    let html = '<table><thead><tr><th>Дата (A)</th><th>ПІБ (C)</th><th>Місце (E)</th></tr></thead><tbody>';
-
-    // Рендерим строки в обратном порядке (новые сверху)
-    for (let i = rowCount - 1; i >= 0; i--) {
-        const val = (col) => data.getValue(i, col) || '';
-        const formattedDate = data.getFormattedValue(i, 0).split(' ')[0]; // Только дата из колонки A 
-
-        html += `<tr onclick='openDoc(${JSON.stringify({
-            A: formattedDate,
-            B: val(1), // Колонка B [cite: 18]
-            C: val(2), // Колонка C [cite: 17]
-            E: val(4), // Колонка E [cite: 19]
-            G: val(6), // Колонка G [cite: 20]
-            H: val(7), // Колонка H [cite: 21]
-            I: val(8), // Колонка I [cite: 22]
-            L: data.getFormattedValue(i, 11) || '' // Колонка L [cite: 23]
-        })})'>
-            <td>${i === rowCount-1 ? '<span class="new-tag">НОВИЙ</span>' : ''}${formattedDate}</td>
-            <td><b>${val(2)}</b></td>
-            <td>${val(4)}</td>
-        </tr>`;
-    }
-    html += '</tbody></table>';
-    
-    document.getElementById('table_div').innerHTML = html;
-    document.getElementById('status').innerText = "Дані оновлено. Оберіть запис:";
-}
-
-function openDoc(d) {
+function fillDoc(d) {
     document.querySelector('.container').style.display = 'none';
     document.getElementById('printArea').style.display = 'block';
 
-    document.getElementById('doc_A').innerText = d.A;
-    document.getElementById('doc_C').innerText = d.C;
-    document.getElementById('doc_B').innerText = d.B;
-    document.getElementById('doc_name_short').innerText = d.C.split(' ')[1] || d.C;
+    document.getElementById('field_A').innerText = d.A;
+    document.getElementById('field_C').innerText = d.C;
+    document.getElementById('field_B').innerText = d.B;
+    document.getElementById('field_Name').innerText = d.C.split(' ')[1] || d.C;
 
-    // Логіка перевірки дати закінчення (Колонка L) 
-    let dateRange = d.G;
-    if (d.L && d.L !== d.G && d.L.trim() !== "") {
-        dateRange += ` по ${d.L}`;
+    let period = d.G;
+    // Проверка отличия дат 
+    if (d.L && d.L !== d.G && d.L !== "") {
+        period += ` по ${d.L}`;
     }
 
-    document.getElementById('doc_main_text').innerHTML = `
-        <p style="text-indent: 1.25cm;">Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від <b>${d.A}</b> та на електронну адресу <b>${d.B}</b> направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="edit-zone">${d.E}</span> за ${dateRange} з ${d.H} до ${d.I}.</p>
+    document.getElementById('field_MainText').innerHTML = `
+        <p style="text-indent: 1.25cm;">Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від ${d.A} та на електронну адресу ${d.B} направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="user-input">${d.E}</span> за ${period} з ${d.H} до ${d.I}.</p>
     `;
 }
+
+window.onload = loadTable;
 </script>
 </body>
 </html>
