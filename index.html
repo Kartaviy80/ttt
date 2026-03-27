@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система відповідей на запити - Інфо-Рада-Дніпро</title>
+    <title>Система відповідей - Інфо-Рада-Дніпро</title>
     <style>
         * {
             margin: 0;
@@ -12,9 +12,9 @@
         }
 
         body {
-            font-family: 'Times New Roman', 'Times', 'Georgia', serif;
-            background: #e9ecef;
-            padding: 40px 20px;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+            background: #f0f2f5;
+            padding: 30px 20px;
         }
 
         .container {
@@ -30,12 +30,12 @@
         .app-header h1 {
             font-size: 28px;
             color: #1e466e;
-            font-weight: normal;
-            letter-spacing: 1px;
+            font-weight: 500;
         }
         .app-header p {
-            color: #495057;
+            color: #5a6e7c;
             font-size: 14px;
+            margin-top: 5px;
         }
 
         /* Toolbar */
@@ -47,23 +47,29 @@
             gap: 15px;
             background: white;
             padding: 12px 24px;
-            border-radius: 12px;
+            border-radius: 16px;
             margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
         .search-box input {
-            padding: 8px 16px;
-            width: 260px;
-            border: 1px solid #ced4da;
+            padding: 10px 18px;
+            width: 280px;
+            border: 1px solid #cfdde6;
             border-radius: 30px;
-            font-family: inherit;
             font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .search-box input:focus {
+            border-color: #1e466e;
+            box-shadow: 0 0 0 2px rgba(30,70,110,0.1);
         }
         .stats {
-            background: #f1f3f5;
-            padding: 6px 14px;
+            background: #eef2fa;
+            padding: 6px 16px;
             border-radius: 30px;
             font-size: 14px;
+            color: #1e466e;
         }
 
         /* Cards list */
@@ -74,19 +80,19 @@
         }
         .request-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            border: 1px solid #dee2e6;
+            border: 1px solid #e2e8f0;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         .request-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            border-color: #adb5bd;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: #cbd5e1;
         }
         .card-inner {
-            padding: 16px 20px;
+            padding: 18px 22px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -96,10 +102,10 @@
         .request-number {
             font-weight: 700;
             font-size: 18px;
-            background: #e7f1ff;
+            background: #eef2fa;
             padding: 4px 14px;
             border-radius: 40px;
-            color: #0b5e7e;
+            color: #1e466e;
             min-width: 80px;
             text-align: center;
         }
@@ -107,24 +113,24 @@
             flex: 3;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px 20px;
+            gap: 12px 24px;
         }
         .info-item {
             font-size: 14px;
         }
         .info-label {
             font-weight: 600;
-            color: #2c3e50;
+            color: #4a5b6e;
         }
         .info-value {
-            color: #1e466e;
+            color: #1e2a3a;
         }
         .card-badge {
-            background: #f8f9fa;
-            padding: 4px 12px;
-            border-radius: 20px;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 30px;
             font-size: 12px;
-            color: #6c757d;
+            color: #4a627a;
         }
 
         /* Modal */
@@ -135,8 +141,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(3px);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -148,27 +154,29 @@
             background: white;
             width: 500px;
             max-width: 90%;
-            border-radius: 24px;
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
         }
         .modal-header {
-            background: #f8f9fa;
-            padding: 16px 20px;
-            border-bottom: 1px solid #e9ecef;
+            background: #f8fafc;
+            padding: 18px 22px;
+            border-bottom: 1px solid #e9edf2;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .modal-header h3 {
             font-size: 20px;
-            font-weight: 500;
+            font-weight: 600;
+            color: #1e466e;
         }
         .close-modal {
             background: none;
             border: none;
-            font-size: 26px;
+            font-size: 28px;
             cursor: pointer;
+            color: #7f8c8d;
         }
         .modal-body {
             padding: 24px;
@@ -180,7 +188,7 @@
         }
         .btn {
             padding: 12px;
-            border-radius: 40px;
+            border-radius: 60px;
             font-weight: 600;
             font-size: 16px;
             border: none;
@@ -193,10 +201,11 @@
         }
         .btn-primary:hover { background: #0f3557; }
         .btn-secondary {
-            background: #e9ecef;
-            border: 1px solid #ced4da;
+            background: #f1f3f5;
+            border: 1px solid #d0d7de;
+            color: #2c3e50;
         }
-        .btn-secondary:hover { background: #dee2e6; }
+        .btn-secondary:hover { background: #e9ecef; }
         .reason-group {
             margin-top: 20px;
             padding-top: 16px;
@@ -209,42 +218,27 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #f8f9fa;
-            padding: 8px 12px;
+            background: #f9fafb;
+            padding: 10px 14px;
             border-radius: 40px;
+            cursor: pointer;
         }
-
-        /* Document preview (editable) */
-        .document-preview {
-            background: #fef9e6;
-            padding: 20px;
-            border-radius: 16px;
-            margin-top: 20px;
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #5a6e7c;
         }
-        .editable-field {
-            background-color: #fff3bf;
-            padding: 2px 6px;
-            border-radius: 8px;
-            border: 1px dashed #ffc107;
-            cursor: text;
-            display: inline-block;
-            min-width: 80px;
-        }
-        [contenteditable="true"] {
-            outline: none;
-            background-color: #fff3bf;
-        }
-
         @media (max-width: 700px) {
             .card-inner { flex-direction: column; align-items: flex-start; }
+            .request-info { width: 100%; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="app-header">
-        <h1>📋 Система опрацювання запитів</h1>
-        <p>КП «Інфо-Рада-Дніпро» — формування відповідей на запити</p>
+        <h1>📋 Система формування відповідей</h1>
+        <p>КП «Інфо-Рада-Дніпро» — автоматична підготовка документів</p>
     </div>
     <div class="toolbar">
         <div class="search-box">
@@ -253,7 +247,7 @@
         <div class="stats" id="stats">Завантаження...</div>
     </div>
     <div id="requestsContainer" class="requests-list">
-        <div style="text-align:center; padding:40px;">⏳ Завантаження даних...</div>
+        <div class="loading">⏳ Завантаження даних з Google Таблиці...</div>
     </div>
 </div>
 
@@ -268,13 +262,15 @@
 </div>
 
 <script>
+    // Конфігурація
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8/pub?gid=1412438573&single=true&output=csv";
+    const TEMPLATE_ID = "1njDbk6ON-pHQKOc0yeFRBkBK1yNhGZlNarwb7AfTMlE"; // ID вашого шаблону Google Docs
     
     let allRequests = [];
     let currentRequest = null;
     let selectedReason = null;
 
-    // Парсинг CSV з урахуванням лапок
+    // Парсинг CSV
     function parseCSV(csvText) {
         const rows = [];
         let currentRow = [];
@@ -310,15 +306,14 @@
             const text = await resp.text();
             const rows = parseCSV(text);
             if (rows.length < 2) throw new Error("Немає даних");
-            const headers = rows[0];
-            // мапимо колонки за індексами: A=0, B=1, C=2, E=4, G=6, H=7, I=8, L=11
+            
             allRequests = [];
             for (let i = 1; i < rows.length; i++) {
                 const row = rows[i];
                 if (row.length < 5) continue;
                 allRequests.push({
                     id: i,
-                    A_date: row[0] || "",      // дата запиту
+                    A_date: row[0] || "",
                     B_email: row[1] || "",
                     C_name: row[2] || "",
                     E_place: row[4] || "",
@@ -328,25 +323,26 @@
                     L_endDate: row[11] || ""
                 });
             }
-            // сортування: новіші за датою в колонці A (зверху)
-            allRequests.sort((a,b) => {
+            
+            // Сортування: новіші за датою (колонка A) зверху
+            allRequests.sort((a, b) => {
                 const dateA = new Date(a.A_date);
                 const dateB = new Date(b.A_date);
                 return dateB - dateA;
             });
+            
             renderList(allRequests);
-            document.getElementById('stats').innerText = `📋 Всього: ${allRequests.length}`;
+            document.getElementById('stats').innerHTML = `📋 Всього запитів: ${allRequests.length}`;
         } catch(e) {
             console.error(e);
-            document.getElementById('requestsContainer').innerHTML = `<div style="padding:40px; text-align:center; color:red;">❌ Помилка завантаження: ${e.message}</div>`;
+            document.getElementById('requestsContainer').innerHTML = `<div class="loading">❌ Помилка завантаження: ${e.message}<br>Перевірте доступ до CSV</div>`;
         }
     }
 
-    // Відображення карток
     function renderList(requests) {
         const container = document.getElementById('requestsContainer');
         if (!requests.length) {
-            container.innerHTML = '<div style="padding:40px;text-align:center;">Немає запитів</div>';
+            container.innerHTML = '<div class="loading">Немає запитів</div>';
             return;
         }
         container.innerHTML = '';
@@ -372,7 +368,6 @@
         });
     }
 
-    // Модалка вибору дії
     function showActionModal(request) {
         currentRequest = request;
         selectedReason = null;
@@ -393,7 +388,7 @@
         `;
         document.getElementById('approveBtn').onclick = () => {
             let docNumber = prompt("Введіть вихідний номер документа:", "СЦ-" + new Date().toISOString().slice(0,10).replace(/-/g,'') + "-");
-            if (docNumber) generateAndShowDocument(currentRequest, docNumber, 'approve');
+            if (docNumber) createGoogleDocCopy(currentRequest, docNumber, 'approve');
             closeModal();
         };
         const refuseBtn = document.getElementById('refuseBtn');
@@ -403,7 +398,7 @@
             const selected = document.querySelector('input[name="reason"]:checked');
             if (!selected) { alert("Оберіть причину відмови"); return; }
             let docNumber = prompt("Введіть вихідний номер документа (відмова):", "ВР-" + new Date().toISOString().slice(0,10).replace(/-/g,'') + "-");
-            if (docNumber) generateAndShowDocument(currentRequest, docNumber, 'refuse', selected.value);
+            if (docNumber) createGoogleDocCopy(currentRequest, docNumber, 'refuse', selected.value);
             closeModal();
         };
         document.getElementById('actionModal').classList.add('active');
@@ -413,160 +408,115 @@
         document.getElementById('actionModal').classList.remove('active');
     }
 
-    // Генерація документа з редагувальними полями
-    function generateAndShowDocument(req, docNumber, type, reasonKey = null) {
-        // підготовка даних
-        const requestDate = (req.A_date || '').split(' ')[0];
-        const eventDate = req.G_eventDate || '';
-        const startTime = req.H_startTime || '';
-        const endTime = req.I_endTime || '';
-        const endDate = req.L_endDate || '';
+    // Створення копії Google Docs з підстановкою даних через API
+    async function createGoogleDocCopy(request, docNumber, type, reasonKey = null) {
+        // Підготовка даних для підстановки
+        const requestDate = (request.A_date || '').split(' ')[0];
+        const eventDate = request.G_eventDate || '';
+        const startTime = request.H_startTime || '';
+        const endTime = request.I_endTime || '';
+        const endDate = request.L_endDate || '';
+        
         let endDateSuffix = '';
         if (endDate && endDate !== eventDate) {
-            endDateSuffix = ` ${endDate}`;
+            endDateSuffix = endDate;
         }
         
-        let reasonExtra = '';
+        // Звертання (ім'я у давальному відмінку)
+        let nameParts = request.C_name.split(' ');
+        let salutation = request.C_name;
+        if (nameParts.length >= 2) {
+            salutation = nameParts[0] + ' ' + nameParts[1];
+        }
+        
+        let reasonText = '';
         if (type === 'refuse' && reasonKey) {
             const reasons = {
-                no_camera: '❌ Відмовлено: на зазначеному місці не встановлено камер відеоспостереження.',
-                no_power: '❌ Відмовлено: у запитуваний період було відсутнє електропостачання, запис відсутній.',
-                repair: '❌ Відмовлено: проводились ремонтні роботи, технічна неможливість надати відео.',
-                confidential: '❌ Відмовлено: інформація містить конфіденційні дані та не підлягає наданню.'
+                no_camera: 'Відмовлено: на зазначеному місці не встановлено камер відеоспостереження.',
+                no_power: 'Відмовлено: у запитуваний період було відсутнє електропостачання, запис відсутній.',
+                repair: 'Відмовлено: проводились ремонтні роботи, технічна неможливість надати відео.',
+                confidential: 'Відмовлено: інформація містить конфіденційні дані та не підлягає наданню.'
             };
-            reasonExtra = `\n\nНа жаль, у наданні відео відмовлено.\n${reasons[reasonKey] || 'Причина не вказана.'}`;
+            reasonText = reasons[reasonKey] || 'Відмовлено у наданні відео.';
         }
         
-        // формуємо HTML документа, ідентичний до зразка, з редагувальними полями
-        const docHtml = `
+        // Дані для підстановки в Google Docs
+        const replacements = {
+            '{{опер.впиш}}': docNumber,
+            '{{датанад}}': requestDate,
+            '{{ФИО}}': request.C_name,
+            '{{Почта}}': request.B_email,
+            '{{Місце події}}': request.E_place,
+            '{{Дата початку події}}': eventDate,
+            '{{час початку}}': startTime,
+            '{{Час закінчення}}': endTime,
+            '{{Дата закінчення}}': endDateSuffix,
+            '{{оператор впише}}': 'Гайлар Нікіта 067 370 12 64'
+        };
+        
+        // Додаємо текст причини для відмови (як заглушку в кінці документа)
+        let finalContent = '';
+        if (type === 'refuse') {
+            finalContent = `\n\n⚠️ ВІДМОВА: ${reasonText}`;
+        }
+        
+        // Формуємо URL для створення копії через Google Drive API (потрібна авторизація)
+        // Оскільки пряме створення копії через API потребує OAuth 2.0,
+        // пропонуємо альтернативний спосіб:
+        
+        // Спосіб: відкриваємо шаблон і пропонуємо зробити копію вручну з підказкою
+        const templateUrl = `https://docs.google.com/document/d/${TEMPLATE_ID}/copy`;
+        
+        // Відкриваємо вікно з інструкцією та даними для копіювання
+        const dataString = Object.entries(replacements).map(([key, val]) => `${key} = ${val}`).join('\n');
+        
+        const helpWindow = window.open('', '_blank');
+        helpWindow.document.write(`
             <!DOCTYPE html>
             <html>
-            <head><meta charset="UTF-8"><title>Відповідь №${docNumber}</title>
+            <head><meta charset="UTF-8"><title>Створення документа</title>
             <style>
-                body {
-                    font-family: 'Times New Roman', Times, serif;
-                    margin: 0;
-                    padding: 40px 20px;
-                    background: #e2e6e9;
-                    display: flex;
-                    justify-content: center;
-                }
-                .document {
-                    max-width: 800px;
-                    background: white;
-                    padding: 40px 35px 50px 35px;
-                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                    border-radius: 4px;
-                    line-height: 1.45;
-                    font-size: 14pt;
-                }
-                .header-logo {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                .logo-placeholder {
-                    width: 80px;
-                    height: 80px;
-                    background: #e9ecef;
-                    border-radius: 50%;
-                    margin: 0 auto 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 12px;
-                    color: #6c757d;
-                }
-                .org-name {
-                    font-weight: 700;
-                    font-size: 16pt;
-                    letter-spacing: 1px;
-                    text-transform: uppercase;
-                }
-                .org-address {
-                    font-size: 11pt;
-                    color: #2c3e50;
-                    margin-top: 5px;
-                }
-                .recipient {
-                    margin-top: 20px;
-                }
-                .subject {
-                    font-weight: bold;
-                    margin: 20px 0 10px;
-                }
-                .salutation {
-                    margin: 15px 0;
-                }
-                .content-text {
-                    text-align: justify;
-                }
-                .signature {
-                    margin-top: 35px;
-                }
-                .editable {
-                    background-color: #fff3bf;
-                    padding: 2px 6px;
-                    border-radius: 6px;
-                    border: 1px dashed #ffc107;
-                    display: inline-block;
-                    min-width: 80px;
-                    cursor: text;
-                }
-                [contenteditable="true"] {
-                    outline: none;
-                }
-                button {
-                    margin: 20px 10px 0 0;
-                    padding: 8px 18px;
-                    background: #1e466e;
-                    color: white;
-                    border: none;
-                    border-radius: 30px;
-                    cursor: pointer;
-                    font-size: 14px;
-                }
-                .toolbar-print {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
+                body { font-family: 'Segoe UI', system-ui; max-width: 700px; margin: 40px auto; padding: 20px; line-height: 1.5; }
+                h2 { color: #1e466e; }
+                .info { background: #eef2fa; padding: 20px; border-radius: 16px; margin: 20px 0; white-space: pre-wrap; font-family: monospace; }
+                .btn { display: inline-block; background: #1e466e; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; margin-top: 15px; }
+                .note { background: #fff3bf; padding: 12px; border-radius: 12px; margin-top: 20px; }
+                button { background: #1e466e; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-top: 10px; }
             </style>
             </head>
             <body>
-            <div class="document">
-                <div class="toolbar-print">
-                    <button onclick="window.print()">🖨️ Друк / Зберегти як PDF</button>
-                    <button onclick="window.close()">✖️ Закрити</button>
+                <h2>📄 Створення документа-відповіді</h2>
+                <p><strong>Запит №${request.id}</strong> від ${requestDate}</p>
+                <p>Для створення документа:</p>
+                <ol>
+                    <li>Натисніть кнопку нижче, щоб відкрити шаблон</li>
+                    <li>У меню виберіть <strong>Файл → Створити копію</strong></li>
+                    <li>Вставте наведені нижче дані у відповідні місця документа</li>
+                    <li>Після створення копії ви можете редагувати та надрукувати документ</li>
+                </ol>
+                <a href="${templateUrl}" target="_blank" class="btn">📂 Відкрити шаблон →</a>
+                <div class="info">
+                    <strong>📋 Дані для підстановки:</strong><br><br>
+                    Номер документа: ${docNumber}<br>
+                    Дата запиту: ${requestDate}<br>
+                    ПІБ: ${request.C_name}<br>
+                    Email: ${request.B_email}<br>
+                    Місце події: ${request.E_place}<br>
+                    Дата події: ${eventDate}<br>
+                    Час початку: ${startTime}<br>
+                    Час завершення: ${endTime}<br>
+                    ${endDateSuffix ? `Дата завершення: ${endDateSuffix}` : ''}
+                    ${type === 'refuse' ? `<br><br>⚠️ ПРИЧИНА ВІДМОВИ: ${reasonText}` : ''}
                 </div>
-                <div class="header-logo">
-                    <div class="logo-placeholder">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232c3e50'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3E🏛%3C/text%3E%3C/svg%3E" style="width:70px; border-radius:50%;" alt="logo">
-                    </div>
-                    <div class="org-name">КОМУНАЛЬНЕ ПІДПРИЄМСТВО<br>«ІНФО-РАДА-ДНІПРО»<br>ДНІПРОВСЬКОЇ МІСЬКОЇ РАДИ</div>
-                    <div class="org-address">просп. Дмитра Яворницького, 75, м. Дніпро, 49000, тел. +3 8067 872-79-68,<br>e-mail: inforadadnipro@gmail.com; inforadamonitoring@gmail.com<br>ЄДРПОУ 36094821</div>
+                <div class="note">
+                    💡 <strong>Порада:</strong> після створення копії використайте <strong>Ctrl+H</strong> (знайти та замінити), 
+                    щоб швидко замінити мітки {{...}} на потрібні значення.
                 </div>
-                <div style="margin-top: 25px;">
-                    <div>№ <span class="editable" contenteditable="true">${docNumber}</span> &nbsp;&nbsp;&nbsp; На СЦ-27/03/3 від 27.03.2026</div>
-                    <div class="recipient"><span class="editable" contenteditable="true">${escapeHtml(req.C_name)}</span><br><span class="editable" contenteditable="true">${escapeHtml(req.B_email)}</span></div>
-                    <div class="subject">Про розгляд запиту</div>
-                    <div class="salutation">Шановний(а) <span class="editable" contenteditable="true">${escapeHtml(req.C_name.split(' ')[0] || req.C_name)}</span>!</div>
-                    <div class="content-text">
-                        Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від <span class="editable" contenteditable="true">${requestDate}</span> та на електронну адресу <span class="editable" contenteditable="true">${escapeHtml(req.B_email)}</span> направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="editable" contenteditable="true">${escapeHtml(req.E_place)}</span> за <span class="editable" contenteditable="true">${eventDate}</span> з <span class="editable" contenteditable="true">${startTime}</span> до <span class="editable" contenteditable="true">${endTime}</span><span class="editable" contenteditable="true">${endDateSuffix}</span>.
-                        ${type === 'approve' ? '<br><br>Відео за посиланням буде доступне протягом трьох тижнів.' : ''}
-                        ${reasonExtra ? `<br><br>${reasonExtra.replace(/\n/g,'<br>')}` : ''}
-                    </div>
-                    <div class="signature">
-                        З повагою<br><br>
-                        Директор <span class="editable" contenteditable="true">Альона ЧУЄВА</span><br>
-                        <span class="editable" contenteditable="true">Гайлар Нікіта 067 370 12 64</span>
-                    </div>
-                </div>
-            </div>
+                <button onclick="window.close()">✖️ Закрити</button>
             </body>
             </html>
-        `;
-        const win = window.open();
-        win.document.write(docHtml);
-        win.document.close();
+        `);
+        helpWindow.document.close();
     }
 
     function escapeHtml(str) {
@@ -583,12 +533,12 @@
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allRequests.filter(r => 
-            r.C_name.toLowerCase().includes(term) ||
-            r.B_email.toLowerCase().includes(term) ||
-            r.E_place.toLowerCase().includes(term)
+            (r.C_name && r.C_name.toLowerCase().includes(term)) ||
+            (r.B_email && r.B_email.toLowerCase().includes(term)) ||
+            (r.E_place && r.E_place.toLowerCase().includes(term))
         );
         renderList(filtered);
-        document.getElementById('stats').innerText = `📋 Показано: ${filtered.length} / ${allRequests.length}`;
+        document.getElementById('stats').innerHTML = `📋 Показано: ${filtered.length} / ${allRequests.length}`;
     });
 
     loadData();
