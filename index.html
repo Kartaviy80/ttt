@@ -3,57 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Панель КП «ІНФО-РАДА-ДНІПРО»</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #1a73e8; margin-bottom: 25px; padding-bottom: 15px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
         
-        /* Стили таблицы списка */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #1a73e8; color: white; padding: 15px; text-align: left; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
-        td { padding: 14px; border-bottom: 1px solid #eee; font-size: 15px; transition: 0.2s; }
-        tr:hover { background: #f1f7ff; cursor: pointer; transform: scale(1.002); }
-        .status-badge { background: #28a745; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-right: 10px; vertical-align: middle; }
+        /* Список запитів */
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #1a73e8; color: white; padding: 12px; text-align: left; font-size: 13px; }
+        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; transition: 0.2s; }
+        tr:hover { background: #f1f7ff; cursor: pointer; }
+        .new-tag { background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-right: 8px; font-weight: bold; }
 
-        /* Формат А4 для печати */
+        /* Формат А4 */
         .printable-doc {
             display: none; width: 210mm; min-height: 297mm; padding: 20mm 15mm 20mm 25mm;
-            margin: 20px auto; background: white; font-family: "Times New Roman", serif;
-            font-size: 14pt; line-height: 1.3; text-align: justify; color: black; box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            margin: 20px auto; background: white; font-family: "Times New Roman", Times, serif;
+            font-size: 14pt; line-height: 1.3; color: black; text-align: justify; box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
-        .edit-focus { background: #f0f7ff; border-bottom: 1px dashed #1a73e8; padding: 0 2px; }
+        .edit-zone { background: #f4f8ff; border-bottom: 1px dashed #1a73e8; }
 
         @media print {
             .no-print, .container { display: none !important; }
             .printable-doc { display: block !important; margin: 0; box-shadow: none; width: 100%; }
-            .edit-focus { background: none !important; border: none !important; }
+            .edit-zone { background: none !important; border: none !important; }
             @page { size: A4; margin: 0; }
         }
 
-        .btn { padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
-        .btn-print { background: #28a745; color: white; }
-        .btn-print:hover { background: #218838; }
+        .btn { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-back { background: #6c757d; color: white; margin-right: 10px; }
+        .btn-print { background: #28a745; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container no-print">
-    <div class="header-top">
+    <div class="header">
         <h2 style="margin:0; color:#1a73e8;">Моніторинг запитів (Останні зверху)</h2>
-        <div id="loader" style="font-weight:bold; color:#f39c12;">Оновлення даних...</div>
+        <div id="status" style="font-weight:bold;">Завантаження через Google API...</div>
     </div>
-    
-    <table id="mainTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Дата запиту (A)</th>
-                <th>Заявник (C)</th>
-                <th>Адреса/Місце (E)</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
+    <div id="table_div"></div>
 </div>
 
 <div id="printArea" class="printable-doc" contenteditable="true">
@@ -70,7 +60,7 @@
     </div>
 
     <div style="margin-bottom: 30px;">
-        <span class="edit-focus">______________</span> № <span class="edit-focus">__________</span>, на № <span class="edit-focus" id="doc_num">СЦ-___/___/___</span> від <span id="doc_A" class="edit-focus"></span>
+        <span class="edit-zone">______________</span> № <span class="edit-zone">__________</span>, на <span class="edit-zone">СЦ-___/___/___</span> від <span id="doc_A" class="edit-zone"></span>
     </div>
 
     <div style="margin-left: 55%; margin-bottom: 50px; line-height: 1.2;">
@@ -78,12 +68,11 @@
         <span id="doc_B"></span>
     </div>
 
-    <div style="text-align: center; font-weight: bold; margin-bottom: 25px; text-decoration: underline;">Про розгляд запиту</div>
+    <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">Про розгляд запиту</div>
     
-    <p>Шановний пане <span id="doc_name_short" class="edit-focus"></span>!</p>
+    <p>Шановний пане <span id="doc_name_short" class="edit-zone"></span>!</p>
 
-    <div id="doc_text">
-        </div>
+    <div id="doc_main_text"></div>
 
     <p style="text-indent: 1.25cm;">Відео за посиланням буде доступне протягом трьох тижнів.</p>
 
@@ -92,95 +81,80 @@
         <span style="font-weight: bold; text-transform: uppercase;">Альона ЧУЄВА</span>
     </div>
 
-    <div class="no-print" style="position: fixed; top: 20px; right: 20px; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 10px; border: 1px solid #ddd;">
-        <button class="btn btn-back" onclick="location.reload()">← До списку</button>
-        <button class="btn btn-print" onclick="window.print()">🖨️ ДРУКУВАТИ / PDF</button>
+    <div class="no-print" style="position: fixed; top: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ccc;">
+        <button class="btn btn-back" onclick="location.reload()">← Назад</button>
+        <button class="btn btn-print" onclick="window.print()">🖨️ ДРУКУВАТИ</button>
     </div>
 </div>
 
 <script>
-// Твоя ссылка на CSV [cite: 5]
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8/pub?gid=1412438573&single=true&output=csv';
+// ID твоєї таблиці з посилання
+const SPREADSHEET_ID = '1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8';
+const GID = '1412438573';
 
-async function fetchData() {
-    // Список прокси-серверов для гарантированного обхода блокировок
-    const proxies = [
-        url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-        url => `https://corsproxy.io/?${encodeURIComponent(url)}`
-    ];
+google.charts.load('current', {'packages':['table']});
+google.charts.setOnLoadCallback(drawTable);
 
-    for (let proxy of proxies) {
-        try {
-            const response = await fetch(proxy(SHEET_URL));
-            if (!response.ok) continue;
-            const csvText = await response.text();
-            processData(csvText);
-            return;
-        } catch (e) { console.warn("Проксі не відповів, спроба іншого..."); }
+function drawTable() {
+    const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?gid=${GID}&tq=SELECT *`);
+    query.send(handleQueryResponse);
+}
+
+function handleQueryResponse(response) {
+    if (response.isError()) {
+        document.getElementById('status').innerHTML = "<span style='color:red'>Помилка API Google: " + response.getMessage() + "</span>";
+        return;
     }
-    document.getElementById('loader').innerHTML = "<span style='color:red'>Помилка! Перевірте інтернет або публікацію таблиці.</span>";
+
+    const data = response.getDataTable();
+    const rowCount = data.getNumberOfRows();
+    let html = '<table><thead><tr><th>Дата (A)</th><th>ПІБ (C)</th><th>Місце (E)</th></tr></thead><tbody>';
+
+    // Рендерим строки в обратном порядке (новые сверху)
+    for (let i = rowCount - 1; i >= 0; i--) {
+        const val = (col) => data.getValue(i, col) || '';
+        const formattedDate = data.getFormattedValue(i, 0).split(' ')[0]; // Только дата из колонки A 
+
+        html += `<tr onclick='openDoc(${JSON.stringify({
+            A: formattedDate,
+            B: val(1), // Колонка B [cite: 18]
+            C: val(2), // Колонка C [cite: 17]
+            E: val(4), // Колонка E [cite: 19]
+            G: val(6), // Колонка G [cite: 20]
+            H: val(7), // Колонка H [cite: 21]
+            I: val(8), // Колонка I [cite: 22]
+            L: data.getFormattedValue(i, 11) || '' // Колонка L [cite: 23]
+        })})'>
+            <td>${i === rowCount-1 ? '<span class="new-tag">НОВИЙ</span>' : ''}${formattedDate}</td>
+            <td><b>${val(2)}</b></td>
+            <td>${val(4)}</td>
+        </tr>`;
+    }
+    html += '</tbody></table>';
+    
+    document.getElementById('table_div').innerHTML = html;
+    document.getElementById('status').innerText = "Дані оновлено. Оберіть запис:";
 }
 
-function processData(csv) {
-    const lines = csv.split('\n');
-    const rows = lines.slice(1)
-        .map(line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/))
-        .filter(cols => cols.length > 5)
-        .reverse(); // Последние записи — первые в списке
-
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
-
-    rows.forEach((cols, index) => {
-        const clean = (val) => val ? val.replace(/"/g, '').trim() : '';
-        const item = {
-            A: clean(cols[0]).split(' ')[0], // Дата запиту [cite: 16]
-            B: clean(cols[1]),                // Email [cite: 18]
-            C: clean(cols[2]),                // ПІБ [cite: 17]
-            E: clean(cols[4]),                // Місце [cite: 19]
-            G: clean(cols[6]),                // Дата початку [cite: 20]
-            H: clean(cols[7]),                // Час поч. [cite: 21]
-            I: clean(cols[8]),                // Час кін. [cite: 22]
-            L: clean(cols[11])                // Дата закінч. [cite: 23]
-        };
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${index === 0 ? '<span class="status-badge">NEW</span>' : ''}${item.A}</td>
-                        <td><b>${item.C}</b></td>
-                        <td><small>${item.E}</small></td>`;
-        tr.onclick = () => fillDocument(item);
-        tbody.appendChild(tr);
-    });
-
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('mainTable').style.display = 'table';
-}
-
-function fillDocument(d) {
+function openDoc(d) {
     document.querySelector('.container').style.display = 'none';
     document.getElementById('printArea').style.display = 'block';
 
-    document.getElementById('doc_A').innerText = d.A; // Колонка A [cite: 16]
-    document.getElementById('doc_C').innerText = d.C; // Колонка C [cite: 17]
-    document.getElementById('doc_B').innerText = d.B; // Колонка B [cite: 18]
-    
-    // Приветствие по имени [cite: 9]
-    const firstName = d.C.split(' ')[1] || d.C;
-    document.getElementById('doc_name_short').innerText = firstName;
+    document.getElementById('doc_A').innerText = d.A;
+    document.getElementById('doc_C').innerText = d.C;
+    document.getElementById('doc_B').innerText = d.B;
+    document.getElementById('doc_name_short').innerText = d.C.split(' ')[1] || d.C;
 
-    // Логика интервала дат (Колонка G + Колонка L) 
-    let period = d.G;
+    // Логіка перевірки дати закінчення (Колонка L) 
+    let dateRange = d.G;
     if (d.L && d.L !== d.G && d.L.trim() !== "") {
-        period += ` по ${d.L}`;
+        dateRange += ` по ${d.L}`;
     }
 
-    // Формирование основного текста [cite: 10, 11]
-    document.getElementById('doc_text').innerHTML = `
-        <p style="text-indent: 1.25cm;">Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від <b>${d.A}</b> та на електронну адресу <b>${d.B}</b> направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="edit-focus">${d.E}</span> за ${period} з ${d.H} до ${d.I}.</p>
+    document.getElementById('doc_main_text').innerHTML = `
+        <p style="text-indent: 1.25cm;">Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від <b>${d.A}</b> та на електронну адресу <b>${d.B}</b> направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="edit-zone">${d.E}</span> за ${dateRange} з ${d.H} до ${d.I}.</p>
     `;
 }
-
-window.onload = fetchData;
 </script>
 </body>
 </html>
