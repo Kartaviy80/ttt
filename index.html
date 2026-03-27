@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Система відповідей на запити - Інфо-Рада-Дніпро</title>
     <style>
         * {
@@ -12,153 +12,119 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, sans-serif;
-            background: #f0f4f8;
-            color: #1e293b;
-            padding: 2rem 1rem;
+            font-family: 'Times New Roman', 'Times', 'Georgia', serif;
+            background: #e9ecef;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
         /* Header */
-        .header {
-            margin-bottom: 2rem;
+        .app-header {
             text-align: center;
+            margin-bottom: 30px;
+        }
+        .app-header h1 {
+            font-size: 28px;
+            color: #1e466e;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+        .app-header p {
+            color: #495057;
+            font-size: 14px;
         }
 
-        .header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, #1e3c72, #2b4c7c);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .header p {
-            color: #475569;
-            font-size: 0.95rem;
-        }
-
-        /* Search & filter */
+        /* Toolbar */
         .toolbar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 15px;
             background: white;
-            padding: 1rem 1.5rem;
-            border-radius: 24px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 12px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-
-        .search-box {
-            flex: 2;
-            min-width: 200px;
-        }
-
         .search-box input {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: 0.2s;
+            padding: 8px 16px;
+            width: 260px;
+            border: 1px solid #ced4da;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 14px;
         }
-
-        .search-box input:focus {
-            border-color: #2b4c7c;
-            box-shadow: 0 0 0 2px rgba(43,76,124,0.2);
-        }
-
         .stats {
-            background: #eef2ff;
-            padding: 0.4rem 1rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            background: #f1f3f5;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 14px;
         }
 
-        /* Cards/Table as modern list */
+        /* Cards list */
         .requests-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
         .request-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            transition: all 0.2s ease;
-            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border: 1px solid #dee2e6;
             cursor: pointer;
+            transition: all 0.2s;
         }
-
         .request-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 20px -12px rgba(0,0,0,0.15);
-            border-color: #cbd5e1;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #adb5bd;
         }
-
         .card-inner {
-            padding: 1.2rem 1.5rem;
+            padding: 16px 20px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 12px;
         }
-
-        .request-id {
+        .request-number {
             font-weight: 700;
-            font-size: 1.2rem;
-            background: #f1f5f9;
-            padding: 0.2rem 0.8rem;
+            font-size: 18px;
+            background: #e7f1ff;
+            padding: 4px 14px;
             border-radius: 40px;
-            color: #0f3b5f;
+            color: #0b5e7e;
             min-width: 80px;
             text-align: center;
         }
-
         .request-info {
             flex: 3;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem 1.5rem;
+            gap: 12px 20px;
         }
-
         .info-item {
-            display: flex;
-            align-items: baseline;
-            gap: 0.3rem;
-            font-size: 0.9rem;
-            flex-wrap: wrap;
+            font-size: 14px;
         }
-
         .info-label {
             font-weight: 600;
-            color: #475569;
+            color: #2c3e50;
         }
-
         .info-value {
-            color: #1e293b;
-            word-break: break-word;
+            color: #1e466e;
         }
-
-        .request-date-badge {
-            font-size: 0.8rem;
-            background: #e6f0fa;
-            padding: 0.2rem 0.7rem;
-            border-radius: 30px;
-            color: #1e4a76;
+        .card-badge {
+            background: #f8f9fa;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #6c757d;
         }
 
         /* Modal */
@@ -169,536 +135,463 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
-
         .modal.active {
             display: flex;
         }
-
         .modal-content {
             background: white;
-            max-width: 550px;
-            width: 90%;
-            border-radius: 32px;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+            width: 500px;
+            max-width: 90%;
+            border-radius: 24px;
             overflow: hidden;
-            animation: fadeInUp 0.2s ease;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .modal-header {
-            background: #f8fafc;
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .modal-header h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 500;
         }
-
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 26px;
             cursor: pointer;
-            color: #64748b;
         }
-
         .modal-body {
-            padding: 1.5rem;
+            padding: 24px;
         }
-
         .action-buttons {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
         .btn {
-            padding: 0.9rem;
-            border-radius: 60px;
+            padding: 12px;
+            border-radius: 40px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 16px;
             border: none;
             cursor: pointer;
             transition: 0.2s;
-            text-align: center;
         }
-
         .btn-primary {
-            background: #1e4a76;
+            background: #1e466e;
             color: white;
         }
-
-        .btn-primary:hover {
-            background: #0f3b5f;
-        }
-
+        .btn-primary:hover { background: #0f3557; }
         .btn-secondary {
-            background: #f1f5f9;
-            color: #1e293b;
-            border: 1px solid #cbd5e1;
+            background: #e9ecef;
+            border: 1px solid #ced4da;
         }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .btn-danger {
-            background: #fff1f0;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-
-        .btn-danger:hover {
-            background: #fee2e2;
-        }
-
+        .btn-secondary:hover { background: #dee2e6; }
         .reason-group {
-            margin-top: 1rem;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e9ecef;
             display: flex;
             flex-direction: column;
-            gap: 0.7rem;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 1rem;
+            gap: 12px;
         }
-
         .reason-option {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            padding: 0.6rem;
+            gap: 12px;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 40px;
+        }
+
+        /* Document preview (editable) */
+        .document-preview {
+            background: #fef9e6;
+            padding: 20px;
             border-radius: 16px;
-            background: #f9fafb;
-            cursor: pointer;
+            margin-top: 20px;
         }
-
-        .reason-option input {
-            width: 18px;
-            height: 18px;
-        }
-
-        /* Document preview area */
-        .doc-preview {
-            background: #fefce8;
-            border: 1px solid #fde047;
-            border-radius: 20px;
-            padding: 1rem;
-            margin-top: 1rem;
-            max-height: 400px;
-            overflow-y: auto;
-            font-family: monospace;
-            white-space: pre-wrap;
-            font-size: 0.85rem;
-        }
-
-        .doc-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 1rem;
-            justify-content: flex-end;
-        }
-
-        .field-edit {
-            background-color: #fff9c6;
-            border: 1px solid #eab308;
-            padding: 2px 4px;
+        .editable-field {
+            background-color: #fff3bf;
+            padding: 2px 6px;
             border-radius: 8px;
-            font-family: inherit;
+            border: 1px dashed #ffc107;
+            cursor: text;
+            display: inline-block;
+            min-width: 80px;
         }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #475569;
+        [contenteditable="true"] {
+            outline: none;
+            background-color: #fff3bf;
         }
 
         @media (max-width: 700px) {
-            .card-inner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .request-info {
-                width: 100%;
-            }
+            .card-inner { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>📋 Обробка запитів на відео</h1>
-        <p>Комунальне підприємство «Інфо-Рада-Дніпро»</p>
+    <div class="app-header">
+        <h1>📋 Система опрацювання запитів</h1>
+        <p>КП «Інфо-Рада-Дніпро» — формування відповідей на запити</p>
     </div>
     <div class="toolbar">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Пошук за ПІБ, email, місцем події...">
+            <input type="text" id="searchInput" placeholder="🔍 Пошук за ПІБ, email, місцем...">
         </div>
         <div class="stats" id="stats">Завантаження...</div>
     </div>
     <div id="requestsContainer" class="requests-list">
-        <div class="loading">⏳ Завантаження даних з Google Sheets...</div>
+        <div style="text-align:center; padding:40px;">⏳ Завантаження даних...</div>
     </div>
 </div>
 
-<!-- Модальне вікно вибору дії -->
 <div id="actionModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="modalTitle">Виберіть дію</h3>
+            <h3>Виберіть дію</h3>
             <button class="close-modal" onclick="closeModal()">&times;</button>
         </div>
-        <div class="modal-body" id="modalBody">
-            <!-- Динамічний вміст -->
-        </div>
+        <div class="modal-body" id="modalBody"></div>
     </div>
 </div>
 
 <script>
-    // CSV URL (публічний)
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8/pub?gid=1412438573&single=true&output=csv";
     
-    let requestsData = [];    // зберігатиме всі запити
-    let currentRequest = null; // вибраний запит для модалки
-    let selectedReason = null; // для відмови
+    let allRequests = [];
+    let currentRequest = null;
+    let selectedReason = null;
 
-    // --- Шаблон документа (на основі наданого .docx) з позначками для підстановки
-    // Використовуємо маркери: 
-    // [DOC_NUM] - номер документа (вводить оператор)
-    // [DATE_FROM_A] - дата запиту (колонка A)
-    // [FIO] - колонка C
-    // [EMAIL] - колонка B
-    // [PLACE] - колонка E
-    // [EVENT_DATE] - колонка G (дата початку)
-    // [START_TIME] - колонка H
-    // [END_TIME] - колонка I
-    // [END_DATE] - колонка L (якщо відрізняється від G, додаємо окремо)
-    // Також [REASON_TEXT] - для відмови вставимо опис причини
-    
-    function getBaseTemplate() {
-        return `КОМУНАЛЬНЕ ПІДПРИЄМСТВО «ІНФО-РАДА-ДНІПРО»
-ДНІПРОВСЬКОЇ МІСЬКОЇ РАДИ
-просп. Дмитра Яворницького, 75, м. Дніпро, 49000
-тел. +3 8067 872-79-68, e-mail: inforadadnipro@gmail.com
-ЄДРПОУ 36094821
-
-_________________ № [DOC_NUM]               На № ________ від __________
-
-[FIO]
-[EMAIL]
-
-Про розгляд запиту
-
-Шановний(а) [FIO]!
-
-Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від [DATE_FROM_A] та на електронну адресу [EMAIL] направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на [PLACE] за [EVENT_DATE] з [START_TIME] до [END_TIME][END_DATE_SUFFIX].
-
-Відео за посиланням буде доступне протягом трьох тижнів.
-
-[REASON_EXTRA]
-
-З повагою
-Директор Альона ЧУЄВА`;
-    }
-
-    // Функція генерації документа з підстановкою
-    function generateDocument(request, docNumber, reasonExtra = '') {
-        let template = getBaseTemplate();
-        
-        // Дата з колонки A (лише дата)
-        let dateFromA = request.A || '';
-        // Якщо в A є час, відрізаємо
-        if (dateFromA.includes(' ')) dateFromA = dateFromA.split(' ')[0];
-        
-        const place = request.E || '';
-        const eventDate = request.G || '';
-        const startTime = request.H || '';
-        const endTime = request.I || '';
-        const endDateRaw = request.L || '';
-        
-        let endDateSuffix = '';
-        if (endDateRaw && eventDate && endDateRaw !== eventDate) {
-            endDateSuffix = ` ${endDateRaw}`;
+    // Парсинг CSV з урахуванням лапок
+    function parseCSV(csvText) {
+        const rows = [];
+        let currentRow = [];
+        let currentField = "";
+        let inQuotes = false;
+        for (let i = 0; i < csvText.length; i++) {
+            let ch = csvText[i];
+            if (ch === '"') {
+                inQuotes = !inQuotes;
+            } else if (ch === ',' && !inQuotes) {
+                currentRow.push(currentField);
+                currentField = "";
+            } else if (ch === '\n' && !inQuotes) {
+                currentRow.push(currentField);
+                rows.push(currentRow);
+                currentRow = [];
+                currentField = "";
+            } else {
+                currentField += ch;
+            }
         }
-        
-        const replacements = {
-            '[DOC_NUM]': docNumber,
-            '[DATE_FROM_A]': dateFromA,
-            '[FIO]': request.C || '',
-            '[EMAIL]': request.B || '',
-            '[PLACE]': place,
-            '[EVENT_DATE]': eventDate,
-            '[START_TIME]': startTime,
-            '[END_TIME]': endTime,
-            '[END_DATE_SUFFIX]': endDateSuffix,
-            '[REASON_EXTRA]': reasonExtra
-        };
-        
-        for (const [key, value] of Object.entries(replacements)) {
-            template = template.replace(new RegExp(key, 'g'), value || '');
+        if (currentField || currentRow.length) {
+            currentRow.push(currentField);
+            rows.push(currentRow);
         }
-        
-        return template;
+        return rows;
     }
 
-    // Отримання причини відмови текстом
-    function getReasonText(reasonKey) {
-        const reasons = {
-            'no_camera': '❌ Відмовлено: на зазначеному місці не встановлено камер відеоспостереження.',
-            'no_power': '❌ Відмовлено: у запитуваний період було відсутнє електропостачання, тому запис відсутній.',
-            'repair': '❌ Відмовлено: проводились ремонтні роботи, технічна неможливість надати відео.',
-            'confidential': '❌ Відмовлено: інформація містить конфіденційні дані та не підлягає наданню.'
-        };
-        return reasons[reasonKey] || '❌ Відмовлено у наданні відео.';
+    // Завантаження даних
+    async function loadData() {
+        try {
+            const resp = await fetch(CSV_URL);
+            const text = await resp.text();
+            const rows = parseCSV(text);
+            if (rows.length < 2) throw new Error("Немає даних");
+            const headers = rows[0];
+            // мапимо колонки за індексами: A=0, B=1, C=2, E=4, G=6, H=7, I=8, L=11
+            allRequests = [];
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.length < 5) continue;
+                allRequests.push({
+                    id: i,
+                    A_date: row[0] || "",      // дата запиту
+                    B_email: row[1] || "",
+                    C_name: row[2] || "",
+                    E_place: row[4] || "",
+                    G_eventDate: row[6] || "",
+                    H_startTime: row[7] || "",
+                    I_endTime: row[8] || "",
+                    L_endDate: row[11] || ""
+                });
+            }
+            // сортування: новіші за датою в колонці A (зверху)
+            allRequests.sort((a,b) => {
+                const dateA = new Date(a.A_date);
+                const dateB = new Date(b.A_date);
+                return dateB - dateA;
+            });
+            renderList(allRequests);
+            document.getElementById('stats').innerText = `📋 Всього: ${allRequests.length}`;
+        } catch(e) {
+            console.error(e);
+            document.getElementById('requestsContainer').innerHTML = `<div style="padding:40px; text-align:center; color:red;">❌ Помилка завантаження: ${e.message}</div>`;
+        }
     }
 
-    // Відкриття модального вікна вибору дії
+    // Відображення карток
+    function renderList(requests) {
+        const container = document.getElementById('requestsContainer');
+        if (!requests.length) {
+            container.innerHTML = '<div style="padding:40px;text-align:center;">Немає запитів</div>';
+            return;
+        }
+        container.innerHTML = '';
+        requests.forEach(req => {
+            const card = document.createElement('div');
+            card.className = 'request-card';
+            card.onclick = () => showActionModal(req);
+            const dateRequest = req.A_date ? req.A_date.split(' ')[0] : '—';
+            card.innerHTML = `
+                <div class="card-inner">
+                    <div class="request-number">№${req.id}</div>
+                    <div class="request-info">
+                        <div class="info-item"><span class="info-label">📅 Запит:</span> ${escapeHtml(dateRequest)}</div>
+                        <div class="info-item"><span class="info-label">👤 ПІБ:</span> ${escapeHtml(req.C_name)}</div>
+                        <div class="info-item"><span class="info-label">📧 Email:</span> ${escapeHtml(req.B_email)}</div>
+                        <div class="info-item"><span class="info-label">📍 Місце:</span> ${escapeHtml(req.E_place)}</div>
+                        <div class="info-item"><span class="info-label">⏱ Подія:</span> ${escapeHtml(req.G_eventDate)} ${req.H_startTime}-${req.I_endTime} ${req.L_endDate && req.L_endDate !== req.G_eventDate ? '(зак. '+req.L_endDate+')' : ''}</div>
+                    </div>
+                    <div class="card-badge">📄 обрати →</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Модалка вибору дії
     function showActionModal(request) {
         currentRequest = request;
         selectedReason = null;
         const modalBody = document.getElementById('modalBody');
         modalBody.innerHTML = `
             <div class="action-buttons">
-                <button class="btn btn-primary" id="approveVideoBtn">✅ Надання відео</button>
-                <button class="btn btn-secondary" id="refuseVideoBtn">⛔ Відмова у наданні відео</button>
+                <button class="btn btn-primary" id="approveBtn">✅ Надання відео</button>
+                <button class="btn btn-secondary" id="refuseBtn">⛔ Відмова у наданні відео</button>
             </div>
-            <div id="refuseReasons" style="display: none;" class="reason-group">
-                <p><strong>Оберіть причину відмови:</strong></p>
-                <label class="reason-option"><input type="radio" name="refuseReason" value="no_camera"> 📷 Не встановлені камери</label>
-                <label class="reason-option"><input type="radio" name="refuseReason" value="no_power"> ⚡ Відсутність електрики</label>
-                <label class="reason-option"><input type="radio" name="refuseReason" value="repair"> 🔧 Ремонтні роботи</label>
-                <label class="reason-option"><input type="radio" name="refuseReason" value="confidential"> 🔒 Конфіденційна інформація</label>
-                <button class="btn btn-danger" id="confirmRefuseBtn" style="margin-top: 12px;">Підтвердити відмову</button>
+            <div id="refuseReasons" style="display:none;" class="reason-group">
+                <p><strong>Причина відмови:</strong></p>
+                <label class="reason-option"><input type="radio" name="reason" value="no_camera"> 📷 Не встановлені камери</label>
+                <label class="reason-option"><input type="radio" name="reason" value="no_power"> ⚡ Відсутність електрики</label>
+                <label class="reason-option"><input type="radio" name="reason" value="repair"> 🔧 Ремонтні роботи</label>
+                <label class="reason-option"><input type="radio" name="reason" value="confidential"> 🔒 Конфіденційна інформація</label>
+                <button class="btn btn-primary" id="confirmRefuseBtn" style="margin-top:12px;">Підтвердити відмову</button>
             </div>
         `;
-        
-        document.getElementById('approveVideoBtn').onclick = () => {
-            // Запитуємо номер документа у користувача (поле ААА - вручну)
-            let docNumber = prompt("Введіть номер документа (наприклад, СЦ-27/03/3):", "СЦ-"+new Date().toISOString().slice(0,10).replace(/-/g,'')+"-");
-            if (docNumber === null) return;
-            const generatedDoc = generateDocument(currentRequest, docNumber, "");
-            showDocumentPreview(generatedDoc, docNumber);
+        document.getElementById('approveBtn').onclick = () => {
+            let docNumber = prompt("Введіть вихідний номер документа:", "СЦ-" + new Date().toISOString().slice(0,10).replace(/-/g,'') + "-");
+            if (docNumber) generateAndShowDocument(currentRequest, docNumber, 'approve');
             closeModal();
         };
-        
-        const refuseBtn = document.getElementById('refuseVideoBtn');
-        const refuseReasonsDiv = document.getElementById('refuseReasons');
-        refuseBtn.onclick = () => {
-            refuseReasonsDiv.style.display = 'flex';
-            const radios = document.querySelectorAll('input[name="refuseReason"]');
-            radios.forEach(radio => {
-                radio.onchange = (e) => { selectedReason = e.target.value; };
-            });
-            document.getElementById('confirmRefuseBtn').onclick = () => {
-                if (!selectedReason) {
-                    alert("Будь ласка, оберіть причину відмови");
-                    return;
-                }
-                let docNumber = prompt("Введіть номер документа (відмова):", "ВР-"+new Date().toISOString().slice(0,10).replace(/-/g,'')+"-");
-                if (docNumber === null) return;
-                const reasonText = getReasonText(selectedReason);
-                const fullReasonBlock = `\n\nНа жаль, у наданні відео відмовлено з наступної причини:\n${reasonText}`;
-                const generatedDoc = generateDocument(currentRequest, docNumber, fullReasonBlock);
-                showDocumentPreview(generatedDoc, docNumber);
-                closeModal();
-            };
+        const refuseBtn = document.getElementById('refuseBtn');
+        const refuseDiv = document.getElementById('refuseReasons');
+        refuseBtn.onclick = () => { refuseDiv.style.display = 'flex'; };
+        document.getElementById('confirmRefuseBtn').onclick = () => {
+            const selected = document.querySelector('input[name="reason"]:checked');
+            if (!selected) { alert("Оберіть причину відмови"); return; }
+            let docNumber = prompt("Введіть вихідний номер документа (відмова):", "ВР-" + new Date().toISOString().slice(0,10).replace(/-/g,'') + "-");
+            if (docNumber) generateAndShowDocument(currentRequest, docNumber, 'refuse', selected.value);
+            closeModal();
         };
-        
         document.getElementById('actionModal').classList.add('active');
     }
-    
-    // Показ документа з можливістю редагування виділених полів та друку
-    function showDocumentPreview(fullText, docNumber) {
-        const previewWindow = window.open('', '_blank');
-        if (!previewWindow) {
-            alert("Будь ласка, дозвольте спливаючі вікна для попереднього перегляду документа.");
-            return;
+
+    function closeModal() {
+        document.getElementById('actionModal').classList.remove('active');
+    }
+
+    // Генерація документа з редагувальними полями
+    function generateAndShowDocument(req, docNumber, type, reasonKey = null) {
+        // підготовка даних
+        const requestDate = (req.A_date || '').split(' ')[0];
+        const eventDate = req.G_eventDate || '';
+        const startTime = req.H_startTime || '';
+        const endTime = req.I_endTime || '';
+        const endDate = req.L_endDate || '';
+        let endDateSuffix = '';
+        if (endDate && endDate !== eventDate) {
+            endDateSuffix = ` ${endDate}`;
         }
-        // Робимо документ редагувальним, поля з даними (FIO, EMAIL, PLACE, дати) можна коригувати
-        // Перетворимо текст у HTML з contenteditable для ключових полів, але для простоти - зробимо textarea з можливістю редагування та друку.
-        // Оскільки в завданні: "виділені поля, де інформацію треба змінити, оператор перевіряє і друкує"
-        // Зробимо зручне поле textarea з попередньо заповненим текстом, та кнопку друку.
-        previewWindow.document.write(`
+        
+        let reasonExtra = '';
+        if (type === 'refuse' && reasonKey) {
+            const reasons = {
+                no_camera: '❌ Відмовлено: на зазначеному місці не встановлено камер відеоспостереження.',
+                no_power: '❌ Відмовлено: у запитуваний період було відсутнє електропостачання, запис відсутній.',
+                repair: '❌ Відмовлено: проводились ремонтні роботи, технічна неможливість надати відео.',
+                confidential: '❌ Відмовлено: інформація містить конфіденційні дані та не підлягає наданню.'
+            };
+            reasonExtra = `\n\nНа жаль, у наданні відео відмовлено.\n${reasons[reasonKey] || 'Причина не вказана.'}`;
+        }
+        
+        // формуємо HTML документа, ідентичний до зразка, з редагувальними полями
+        const docHtml = `
             <!DOCTYPE html>
             <html>
-            <head><meta charset="UTF-8"><title>Документ №${docNumber}</title>
+            <head><meta charset="UTF-8"><title>Відповідь №${docNumber}</title>
             <style>
-                body { font-family: 'Times New Roman', serif; margin: 2rem; background: #f9f9f9; display: flex; justify-content: center; }
-                .paper { max-width: 800px; background: white; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 12px; }
-                textarea { width: 100%; height: 70vh; font-family: monospace; font-size: 14px; padding: 1rem; border: 1px solid #ccc; margin-bottom: 1rem; white-space: pre-wrap; }
-                button { background: #1e4a76; color: white; border: none; padding: 10px 24px; border-radius: 40px; cursor: pointer; font-size: 1rem; margin-right: 10px; }
-                button:hover { background: #0f3b5f; }
-                .toolbar { margin-bottom: 1rem; }
+                body {
+                    font-family: 'Times New Roman', Times, serif;
+                    margin: 0;
+                    padding: 40px 20px;
+                    background: #e2e6e9;
+                    display: flex;
+                    justify-content: center;
+                }
+                .document {
+                    max-width: 800px;
+                    background: white;
+                    padding: 40px 35px 50px 35px;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                    border-radius: 4px;
+                    line-height: 1.45;
+                    font-size: 14pt;
+                }
+                .header-logo {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .logo-placeholder {
+                    width: 80px;
+                    height: 80px;
+                    background: #e9ecef;
+                    border-radius: 50%;
+                    margin: 0 auto 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    color: #6c757d;
+                }
+                .org-name {
+                    font-weight: 700;
+                    font-size: 16pt;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                }
+                .org-address {
+                    font-size: 11pt;
+                    color: #2c3e50;
+                    margin-top: 5px;
+                }
+                .recipient {
+                    margin-top: 20px;
+                }
+                .subject {
+                    font-weight: bold;
+                    margin: 20px 0 10px;
+                }
+                .salutation {
+                    margin: 15px 0;
+                }
+                .content-text {
+                    text-align: justify;
+                }
+                .signature {
+                    margin-top: 35px;
+                }
+                .editable {
+                    background-color: #fff3bf;
+                    padding: 2px 6px;
+                    border-radius: 6px;
+                    border: 1px dashed #ffc107;
+                    display: inline-block;
+                    min-width: 80px;
+                    cursor: text;
+                }
+                [contenteditable="true"] {
+                    outline: none;
+                }
+                button {
+                    margin: 20px 10px 0 0;
+                    padding: 8px 18px;
+                    background: #1e466e;
+                    color: white;
+                    border: none;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    font-size: 14px;
+                }
+                .toolbar-print {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
             </style>
             </head>
             <body>
-            <div class="paper">
-                <div class="toolbar">
+            <div class="document">
+                <div class="toolbar-print">
                     <button onclick="window.print()">🖨️ Друк / Зберегти як PDF</button>
                     <button onclick="window.close()">✖️ Закрити</button>
                 </div>
-                <textarea id="docText">${escapeHtml(fullText)}</textarea>
-                <p style="font-size:12px; color:gray;">✏️ Ви можете редагувати текст документа перед друком. Переконайтеся, що всі поля заповнені вірно.</p>
+                <div class="header-logo">
+                    <div class="logo-placeholder">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232c3e50'/%3E%3Ctext x='50' y='67' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3E🏛%3C/text%3E%3C/svg%3E" style="width:70px; border-radius:50%;" alt="logo">
+                    </div>
+                    <div class="org-name">КОМУНАЛЬНЕ ПІДПРИЄМСТВО<br>«ІНФО-РАДА-ДНІПРО»<br>ДНІПРОВСЬКОЇ МІСЬКОЇ РАДИ</div>
+                    <div class="org-address">просп. Дмитра Яворницького, 75, м. Дніпро, 49000, тел. +3 8067 872-79-68,<br>e-mail: inforadadnipro@gmail.com; inforadamonitoring@gmail.com<br>ЄДРПОУ 36094821</div>
+                </div>
+                <div style="margin-top: 25px;">
+                    <div>№ <span class="editable" contenteditable="true">${docNumber}</span> &nbsp;&nbsp;&nbsp; На СЦ-27/03/3 від 27.03.2026</div>
+                    <div class="recipient"><span class="editable" contenteditable="true">${escapeHtml(req.C_name)}</span><br><span class="editable" contenteditable="true">${escapeHtml(req.B_email)}</span></div>
+                    <div class="subject">Про розгляд запиту</div>
+                    <div class="salutation">Шановний(а) <span class="editable" contenteditable="true">${escapeHtml(req.C_name.split(' ')[0] || req.C_name)}</span>!</div>
+                    <div class="content-text">
+                        Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від <span class="editable" contenteditable="true">${requestDate}</span> та на електронну адресу <span class="editable" contenteditable="true">${escapeHtml(req.B_email)}</span> направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="editable" contenteditable="true">${escapeHtml(req.E_place)}</span> за <span class="editable" contenteditable="true">${eventDate}</span> з <span class="editable" contenteditable="true">${startTime}</span> до <span class="editable" contenteditable="true">${endTime}</span><span class="editable" contenteditable="true">${endDateSuffix}</span>.
+                        ${type === 'approve' ? '<br><br>Відео за посиланням буде доступне протягом трьох тижнів.' : ''}
+                        ${reasonExtra ? `<br><br>${reasonExtra.replace(/\n/g,'<br>')}` : ''}
+                    </div>
+                    <div class="signature">
+                        З повагою<br><br>
+                        Директор <span class="editable" contenteditable="true">Альона ЧУЄВА</span><br>
+                        <span class="editable" contenteditable="true">Гайлар Нікіта 067 370 12 64</span>
+                    </div>
+                </div>
             </div>
-            <script>
-                function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-            <\/script>
             </body>
             </html>
-        `);
-        previewWindow.document.close();
+        `;
+        const win = window.open();
+        win.document.write(docHtml);
+        win.document.close();
     }
-    
+
     function escapeHtml(str) {
+        if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
-    
-    function closeModal() {
-        document.getElementById('actionModal').classList.remove('active');
-        currentRequest = null;
-    }
-    
-    // Завантаження CSV та відображення списку
-    async function loadRequests() {
-        try {
-            const response = await fetch(CSV_URL);
-            const csvText = await response.text();
-            const parsed = parseCSV(csvText);
-            if (parsed.length <= 1) throw new Error("Немає даних");
-            const headers = parsed[0];
-            // Шукаємо індекси потрібних колонок: A,B,C,E,G,H,I,L
-            // CSV може мати першу колонку A, другу B тощо. Припускаємо порядок як у таблиці.
-            // Для безпеки зіставимо за індексом: 0->A,1->B,2->C,4->E,6->G,7->H,8->I,11->L (якщо стовпці стандартні)
-            // Але краще мапити за назвами, але тут простіше - візьмемо по позиції, оскільки CSV зберігає порядок.
-            requestsData = [];
-            for (let i = 1; i < parsed.length; i++) {
-                const row = parsed[i];
-                if (row.length < 5) continue;
-                requestsData.push({
-                    id: i, // порядковий номер
-                    A: row[0] || '', // дата запиту
-                    B: row[1] || '', // email
-                    C: row[2] || '', // ПІБ
-                    E: row[4] || '', // місце події
-                    G: row[6] || '', // дата початку події
-                    H: row[7] || '', // час початку
-                    I: row[8] || '', // час завершення
-                    L: row[11] || ''  // дата закінчення (якщо є)
-                });
-            }
-            renderRequests(requestsData);
-            document.getElementById('stats').innerText = `📋 Всього запитів: ${requestsData.length}`;
-        } catch (err) {
-            console.error(err);
-            document.getElementById('requestsContainer').innerHTML = `<div class="loading">❌ Помилка завантаження даних. Перевірте CSV посилання та доступ. Деталі: ${err.message}</div>`;
-        }
-    }
-    
-    function parseCSV(csv) {
-        const rows = [];
-        let current = '';
-        let inQuote = false;
-        for (let i = 0; i < csv.length; i++) {
-            const ch = csv[i];
-            if (ch === '"') {
-                inQuote = !inQuote;
-            } else if (ch === ',' && !inQuote) {
-                rows.push(current);
-                current = '';
-            } else if (ch === '\n' && !inQuote) {
-                rows.push(current);
-                // додаємо рядок
-                if (rows.length) {
-                    // розділити
-                }
-                current = '';
-            } else {
-                current += ch;
-            }
-        }
-        if (current) rows.push(current);
-        // тепер згрупувати в масив масивів
-        const result = [];
-        let tempRow = [];
-        for (let val of rows) {
-            tempRow.push(val.trim());
-            if (tempRow.length === 12) { // приблизна кількість колонок
-                result.push([...tempRow]);
-                tempRow = [];
-            }
-        }
-        if (tempRow.length) result.push(tempRow);
-        return result;
-    }
-    
-    function renderRequests(requests) {
-        const container = document.getElementById('requestsContainer');
-        if (!requests.length) {
-            container.innerHTML = '<div class="loading">Немає запитів для відображення</div>';
-            return;
-        }
-        container.innerHTML = '';
-        requests.forEach((req, idx) => {
-            const card = document.createElement('div');
-            card.className = 'request-card';
-            card.onclick = () => showActionModal(req);
-            const dateRequest = req.A ? req.A.split(' ')[0] : '—';
-            card.innerHTML = `
-                <div class="card-inner">
-                    <div class="request-id">№${req.id}</div>
-                    <div class="request-info">
-                        <div class="info-item"><span class="info-label">📅 Запит:</span><span class="info-value">${escapeHtml(dateRequest)}</span></div>
-                        <div class="info-item"><span class="info-label">👤 ПІБ:</span><span class="info-value">${escapeHtml(req.C)}</span></div>
-                        <div class="info-item"><span class="info-label">📧 Email:</span><span class="info-value">${escapeHtml(req.B)}</span></div>
-                        <div class="info-item"><span class="info-label">📍 Місце:</span><span class="info-value">${escapeHtml(req.E)}</span></div>
-                        <div class="info-item"><span class="info-label">📅 Подія:</span><span class="info-value">${escapeHtml(req.G)} ${req.H}-${req.I}${req.L && req.L !== req.G ? ' (закін. '+req.L+')' : ''}</span></div>
-                    </div>
-                    <div class="request-date-badge">📄 клікніть для відповіді</div>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    }
-    
+
     // Фільтрація
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        const filtered = requestsData.filter(req => 
-            (req.C && req.C.toLowerCase().includes(term)) ||
-            (req.B && req.B.toLowerCase().includes(term)) ||
-            (req.E && req.E.toLowerCase().includes(term))
+        const filtered = allRequests.filter(r => 
+            r.C_name.toLowerCase().includes(term) ||
+            r.B_email.toLowerCase().includes(term) ||
+            r.E_place.toLowerCase().includes(term)
         );
-        renderRequests(filtered);
-        document.getElementById('stats').innerText = `📋 Показано: ${filtered.length} / ${requestsData.length}`;
+        renderList(filtered);
+        document.getElementById('stats').innerText = `📋 Показано: ${filtered.length} / ${allRequests.length}`;
     });
-    
-    loadRequests();
+
+    loadData();
 </script>
 </body>
 </html>
