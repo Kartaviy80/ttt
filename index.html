@@ -2,78 +2,67 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель обробки запитів — Дніпро</title>
+    <title>Панель обробки запитів — КП «ІНФО-РАДА-ДНІПРО»</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         .header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1a73e8; margin-bottom: 20px; padding-bottom: 10px; }
         #searchInput { padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 6px; outline: none; }
-        #searchInput:focus { border-color: #1a73e8; }
 
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th { background: #1a73e8; color: white; padding: 12px; text-align: left; position: sticky; top: 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #1a73e8; color: white; padding: 12px; text-align: left; }
         td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
         tr:hover { background: #f1f7ff; cursor: pointer; }
         .new-tag { background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-right: 8px; font-weight: bold; }
 
-        /* Модальні вікна */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); overflow-y: auto; backdrop-filter: blur(2px); }
-        .modal-content { background: white; margin: 20px auto; padding: 20px; width: fit-content; border-radius: 8px; position: relative; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); overflow-y: auto; }
+        .modal-content { background: white; margin: 20px auto; padding: 0; width: fit-content; border-radius: 8px; box-shadow: 0 5px 30px rgba(0,0,0,0.3); }
         
-        .choice-box { width: 500px; text-align: center; padding: 40px; }
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px; }
-        .card { border: 2px solid #f0f0f0; padding: 25px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
-        .card:hover { border-color: #1a73e8; background: #f0f7ff; transform: translateY(-3px); }
-        
-        .btn { padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .btn-print { background: #28a745; color: white; }
-        .btn-close { background: #6c757d; color: white; }
-
-        /* СТИЛІ ДОКУМЕНТА (A4) */
+        /* ГЕОМЕТРИЯ ЛИСТА A4 */
         .printable-doc {
             width: 210mm;
             min-height: 297mm;
-            padding: 20mm 15mm 20mm 25mm;
+            padding: 20mm 15mm 20mm 25mm; /* 25мм слева под архивный переплет */
             margin: auto;
             background: white;
             box-sizing: border-box;
             font-family: "Times New Roman", Times, serif;
             font-size: 14pt;
-            line-height: 1.3;
+            line-height: 1.2;
             color: black;
             text-align: justify;
         }
 
-        .highlight-field { background-color: #e8f0fe; padding: 0 2px; border-bottom: 1px dashed #1a73e8; }
+        .edit-zone { background-color: #f8faff; border-bottom: 1px dashed #1a73e8; }
 
         @media print {
             body { background: white; padding: 0; }
-            .no-print, .container, .modal-content > .no-print { display: none !important; }
-            .modal { position: absolute; background: none; overflow: visible; }
-            .modal-content { margin: 0; padding: 0; box-shadow: none; border: none; }
-            .printable-doc { border: none; padding: 20mm 15mm 20mm 25mm; width: 100%; }
-            .highlight-field { background: none !important; border: none !important; }
+            .no-print, .container { display: none !important; }
+            .modal { position: absolute; background: none; }
+            .modal-content { margin: 0; box-shadow: none; }
+            .printable-doc { padding: 20mm 15mm 20mm 25mm; width: 100%; border: none; }
+            .edit-zone { background: none !important; border: none !important; }
         }
+
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 10px; }
+        .btn-print { background: #28a745; color: white; }
+        .btn-close { background: #6c757d; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container no-print">
     <div class="header-flex">
-        <h2>Моніторинг запитів КП «ІНФО-РАДА-ДНІПРО»</h2>
+        <h2>Запити відеоспостереження (Нові зверху)</h2>
         <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Пошук за ПІБ...">
     </div>
-    
-    <div id="loader" style="text-align:center; padding: 50px;">Завантаження даних...</div>
-    
+    <div id="loader" style="text-align:center; padding: 50px;">Оновлення даних з Google Таблиці...</div>
     <table id="requestsTable" style="display:none;">
         <thead>
             <tr>
                 <th>Дата запиту (A)</th>
-                <th>ПІБ Заявника (C)</th>
-                <th>E-mail (B)</th>
+                <th>ПІБ (C)</th>
+                <th>Email (B)</th>
                 <th>Місце події (E)</th>
             </tr>
         </thead>
@@ -81,72 +70,36 @@
     </table>
 </div>
 
-<div id="choiceModal" class="modal">
-    <div class="modal-content choice-box">
-        <h3>Оберіть дію для:</h3>
-        <h4 id="userNameChoice" style="color: #1a73e8;"></h4>
-        <div class="action-grid">
-            <div class="card" onclick="openDoc('accept')">
-                <div style="font-size: 40px;">📄</div>
-                <h4>Надання відео</h4>
-            </div>
-            <div class="card" onclick="showRefuseOptions()">
-                <div style="font-size: 40px;">🚫</div>
-                <h4>Відмова</h4>
-            </div>
-        </div>
-        <br>
-        <button class="btn btn-close" onclick="closeModals()">Скасувати</button>
-    </div>
-</div>
-
-<div id="refuseModal" class="modal">
-    <div class="modal-content choice-box" style="width: 450px;">
-        <h3>Причина відмови</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="card" style="padding: 15px;" onclick="openDoc('refuse', 'відсутністю встановлених камер')">Камери не встановлені</button>
-            <button class="card" style="padding: 15px;" onclick="openDoc('refuse', 'технічною несправністю обладнання')">Технічні роботи</button>
-            <button class="card" style="padding: 15px;" onclick="openDoc('refuse', 'відсутністю електропостачання')">Немає світла</button>
-            <button class="card" style="padding: 15px;" onclick="openDoc('refuse', 'захистом персональних даних')">Конфіденційність</button>
-        </div>
-        <br>
-        <button class="btn btn-close" onclick="closeModals()">Назад</button>
-    </div>
-</div>
-
 <div id="docModal" class="modal">
     <div class="modal-content">
-        <div class="no-print" style="display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px;">
-            <button class="btn btn-close" onclick="closeModals()">← Повернутися</button>
-            <button class="btn btn-print" onclick="window.print()">🖨️ Друк документа</button>
+        <div class="no-print" style="text-align: right; padding: 15px; background: #f8f9fa; border-bottom: 1px solid #ddd;">
+            <button class="btn btn-close" onclick="closeModal()">← Скасувати</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Друкувати документ</button>
         </div>
         
         <div id="printArea" class="printable-doc" contenteditable="true">
-            <div style="display: flex; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 15px;" contenteditable="false">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Coat_of_arms_of_Dnipro.svg/1200px-Coat_of_arms_of_Dnipro.svg.png" width="60" style="margin-right: 20px;">
-                <div style="text-align: center; flex-grow: 1; line-height: 1.1;">
-                    <b style="font-size: 11pt;">КОМУНАЛЬНЕ ПІДПРИЄМСТВО «ІНФО-РАДА-ДНІПРО»<br>ДНІПРОВСЬКОЇ МІСЬКОЇ РАДИ</b><br>
-                    <span style="font-size: 9pt; font-weight: normal;">
-                        просп. Дмитра Яворницького, 75, м. Дніпро, 49000, тел. +3 8067 872-79-68<br>
-                        e-mail: inforadadnipro@gmail.com; ЄДРПОУ 36094821
-                    </span>
+            <div style="display: flex; align-items: start; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px;" contenteditable="false">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Coat_of_arms_of_Dnipro.svg/1200px-Coat_of_arms_of_Dnipro.svg.png" width="65" style="margin-right: 20px;">
+                <div style="text-align: center; flex-grow: 1; font-weight: bold; line-height: 1.1;">
+                    <span style="font-size: 11pt;">КОМУНАЛЬНЕ ПІДПРИЄМСТВО<br>«ІНФО-РАДА-ДНІПРО» ДНІПРОВСЬКОЇ МІСЬКОЇ РАДИ</span><br>
+                    <span style="font-size: 9pt; font-weight: normal;">просп. Дмитра Яворницького, 75, м. Дніпро, 49000, тел. +3 8067 872-79-68, ЄДРПОУ 36094821</span>
                 </div>
             </div>
 
             <div style="margin-bottom: 30px;">
-                № <span class="highlight-field">СЦ-___/___/___</span> від <span id="outDate" class="highlight-field"></span>
+                <span class="edit-zone">______________</span> № <span class="edit-zone">__________</span>, від <span id="reqDateA" class="edit-zone"></span>
             </div>
 
-            <div style="margin-left: 55%; margin-bottom: 50px; line-height: 1.2;">
+            <div style="margin-left: 55%; margin-bottom: 40px; line-height: 1.2;">
                 <b id="fieldC" style="text-transform: uppercase;"></b><br>
                 <span id="fieldB"></span>
             </div>
 
             <div style="text-align: center; font-weight: bold; margin-bottom: 25px;">Про розгляд запиту</div>
             
-            <p>Шановний пане <span id="userNameShort" class="highlight-field"></span>!</p>
+            <p>Шановний пане <span id="salutation" class="edit-zone"></span>!</p>
             
-            <div id="mainText"></div>
+            <div id="docMainContent"></div>
 
             <p style="text-indent: 1.25cm;">Відео за посиланням буде доступне протягом трьох тижнів.</p>
 
@@ -159,105 +112,80 @@
 </div>
 
 <script>
-// ТВОЯ ССЫЛКА НА CSV
+// Твоя пряма посилання на CSV
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfASMLWcfKWSs_l1egULLb51y0oHEE9X1xC_L-9oZULzns3VmvW02qGva_8pYnsbvIlFH2GXAE99n8/pub?gid=1412438573&single=true&output=csv';
 
-let currentData = null;
-
-async function loadTable() {
+async function loadData() {
     try {
-        // Проксі для обходу CORS
         const response = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(SHEET_URL));
         const csv = await response.text();
-        const rows = csv.split('\n').map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+        // Парсинг та реверс (нові зверху)
+        const rows = csv.split('\n').map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)).slice(1).reverse();
         
-        // Перевертаємо, щоб нові були зверху
-        const data = rows.slice(1).reverse();
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
 
-        data.forEach((cols, i) => {
+        rows.forEach((cols, index) => {
             if (cols.length < 5) return;
             const clean = (s) => s ? s.replace(/"/g, '').trim() : '';
             
             const item = {
-                A: clean(cols[0]).split(' ')[0], // Дата запиту [cite: 16]
-                B: clean(cols[1]),                // Email [cite: 18]
-                C: clean(cols[2]),                // ПІБ [cite: 17]
-                E: clean(cols[4]),                // Місце [cite: 19]
-                G: clean(cols[6]),                // Дата початку [cite: 20]
-                H: clean(cols[7]),                // Час поч. [cite: 21]
-                I: clean(cols[8]),                // Час кін. [cite: 22]
-                L: clean(cols[11])                // Дата кін. 
+                A: clean(cols[0]).split(' ')[0], // Дата запиту
+                B: clean(cols[1]),                // Email
+                C: clean(cols[2]),                // ПІБ
+                E: clean(cols[4]),                // Місце
+                G: clean(cols[6]),                // Дата початку
+                H: clean(cols[7]),                // Час поч.
+                I: clean(cols[8]),                // Час кін.
+                L: clean(cols[11])                // Дата кін.
             };
 
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${i === 0 ? '<span class="new-tag">NEW</span>' : ''}${item.A}</td>
-                            <td style="font-weight:bold">${item.C}</td>
+            tr.innerHTML = `<td>${index === 0 ? '<span class="new-tag">NEW</span>' : ''}${item.A}</td>
+                            <td><b>${item.C}</b></td>
                             <td>${item.B}</td>
                             <td>${item.E}</td>`;
-            tr.onclick = () => {
-                currentData = item;
-                document.getElementById('userNameChoice').innerText = item.C;
-                document.getElementById('choiceModal').style.display = 'block';
-            };
+            tr.onclick = () => fillDocument(item);
             tbody.appendChild(tr);
         });
 
         document.getElementById('loader').style.display = 'none';
         document.getElementById('requestsTable').style.display = 'table';
     } catch (e) {
-        document.getElementById('loader').innerText = "Помилка! Перевірте публікацію таблиці в Інтернет.";
+        document.getElementById('loader').innerText = "Помилка доступу до таблиці. Перевірте публікацію CSV.";
     }
 }
 
-function showRefuseOptions() {
-    document.getElementById('choiceModal').style.display = 'none';
-    document.getElementById('refuseModal').style.display = 'block';
-}
-
-function openDoc(type, reason = '') {
-    const d = currentData;
-    document.getElementById('outDate').innerText = new Date().toLocaleDateString('uk-UA');
-    document.getElementById('fieldC').innerText = d.C;
-    document.getElementById('fieldB').innerText = d.B;
+function fillDocument(d) {
+    document.getElementById('reqDateA').innerText = d.A; // Колонка A 
+    document.getElementById('fieldC').innerText = d.C;    // Колонка C 
+    document.getElementById('fieldB').innerText = d.B;    // Колонка B 
     
-    // Вітання (ім'я)
     const nameArr = d.C.split(' ');
-    document.getElementById('userNameShort').innerText = nameArr[1] || nameArr[0];
+    document.getElementById('salutation').innerText = nameArr[1] || nameArr[0];
 
-    // Логіка дати закінчення 
+    // Логіка дати (Колонки G та L) 
     let period = d.G;
-    if (d.L && d.L !== d.G && d.L !== '') {
+    if (d.L && d.L.trim() !== '' && d.L !== d.G) {
         period += ` по ${d.L}`;
     }
 
-    let text = '';
-    if (type === 'accept') {
-        text = `<p style="text-indent: 1.25cm;">Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від <span class="highlight-field">${d.A}</span> та на електронну адресу <span class="highlight-field">${d.B}</span> направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="highlight-field">${d.E}</span> за ${period} з ${d.H} до ${d.I}.</p>`;
-    } else {
-        text = `<p style="text-indent: 1.25cm;">Комунальним підприємством розглянуто Ваш запит від <span class="highlight-field">${d.A}</span> щодо надання відеозапису. Повідомляємо, що надати інформацію не є можливим у зв'язку з <span class="highlight-field">${reason}</span> за адресою <span class="highlight-field">${d.E}</span> у вказаний період.</p>`;
-    }
+    document.getElementById('docMainContent').innerHTML = `
+        <p style="text-indent: 1.25cm;">Комунальним підприємством, у межах повноважень, уважно розглянуто Ваш запит від ${d.A} та на електронну адресу ${d.B} направлено посилання, скориставшись яким, Ви можете завантажити інформацію, отриману з камери системи ситуаційного відеоспостереження міста Дніпра, яка розташована на <span class="edit-zone">${d.E}</span> за ${period} з ${d.H} до ${d.I}.</p>
+    `;
 
-    document.getElementById('mainText').innerHTML = text;
-    document.getElementById('choiceModal').style.display = 'none';
-    document.getElementById('refuseModal').style.display = 'none';
     document.getElementById('docModal').style.display = 'block';
 }
 
-function closeModals() {
-    document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-}
+function closeModal() { document.getElementById('docModal').style.display = 'none'; }
 
 function filterTable() {
     const val = document.getElementById('searchInput').value.toUpperCase();
-    const rows = document.getElementById('tableBody').getElementsByTagName('tr');
-    for (let r of rows) {
-        r.style.display = r.innerText.toUpperCase().includes(val) ? '' : 'none';
-    }
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(r => r.style.display = r.innerText.toUpperCase().includes(val) ? '' : 'none');
 }
 
-window.onload = loadTable;
+window.onload = loadData;
 </script>
 </body>
 </html>
